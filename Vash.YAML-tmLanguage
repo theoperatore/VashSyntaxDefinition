@@ -1,0 +1,80 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+name: Vash
+scopeName: text.html.vash
+fileTypes: [vash]
+uuid: dd0d03da-3c4e-463d-9468-240b07f8b41d
+
+patterns:
+- comment: <text></text> content tags
+  begin: (<text>)
+  beginCaptures:
+    '1': {name: entity.name.textblock.vash}
+  end: (</text>)
+  endCaptures:
+    '1': {name: entity.name.textblock.vash}
+  patterns:
+  - include: $self
+
+
+- comment: handle vash inside html
+  begin: (\<[a-zA-Z0-9]+(\s+[a-zA-Z0-9]+\=)+)
+  beginCaptures:
+    '0': {name: entity.name.html.0.vash}
+    '1': {name: entity.name.html.begin.vash}
+    '2': {name: entity.name.html.attribute.vash}
+  end: (\<(.+?)\>)
+  endCaptures:
+    '1': {name: entity.name.html.end.vash}
+  patterns:
+  - comment: vash in quotes
+    begin: (?<=\=)(\')
+    beginCaptures:
+      '1': {name: string.quoted.single.vash}
+    end: (\')
+    endCaptures:
+      '1': {name: string.quoted.single.vash}
+    patterns:
+    - include: $self
+    - match: .
+      name: string.quoted.single.vash
+    - include: text.html.basic
+  - comment: vash in double quotes
+    begin: (?<=\=)(\")
+    beginCaptures:
+      '1': {name: string.quoted.double.vash}
+    end: (\")
+    endCaptures:
+      '1': {name: string.quoted.double.vash}
+    patterns:
+    - include: $self
+    - match: .
+      name: string.quoted.double.vash
+    - include: text.html.basic
+  - include: text.html.basic
+  - include: $self
+
+- comment: transition brace/bracket
+  begin: (@)?(?:\s*)\{|\(
+  beginCaptures:
+    '1': {name: support.class.vash}
+  end: \}|\)
+  patterns:
+  - include: $self
+  - include: source.js
+
+- comment: Multi-line Comments
+  name: comment.line.vash
+  begin: (@\*)
+  end: (\*@)
+
+- comment: Escaped transition character
+  name: string.regexp
+  match: '@@'
+
+- comment: transition alone, explicit or with properties
+  match: (@[a-zA-Z0-9]*\:?)(?:\.)?([a-zA-Z0-9]*)
+  captures:
+    '1': {name: support.class.vash}
+    '2': {name: entity.name.any.vash}
+
+- include: text.html.basic
