@@ -15,6 +15,15 @@ patterns:
   patterns:
   - include: $self
 
+- comment: special html tags
+  begin: (\<head\>|\<html\>|\<body\>)
+  beginCaptures:
+    '1': {name: entity.name.special.opening.vash}
+  end:  ((\</head\>|\</html\>|\</body\>))
+  endCaptures:
+    '1': {name: entity.name.special.closing.vash}
+  patterns:
+  - include: $self
 
 - comment: handle vash inside html
   begin: (\<[a-zA-Z0-9]+)
@@ -28,8 +37,9 @@ patterns:
     '4': {name: entity.name.end.html.vash}
   patterns:
   - comment: attribute
-    match: ([a-zA-Z0-9\-]+\=)(?=[\'\"])
+    match: ([a-zA-Z0-9\-]+\=)(?=[\'\"\@])
     name: entity.name.attribute.vash
+
   - comment: single quotes
     name: text.basic.vash
     begin: (?<=\=)(\')
@@ -59,21 +69,17 @@ patterns:
     begin: (\>)
     beginCaptures:
       '1': {name: entity.name.begin.closing.vash}
-    end: (\<)
+    end: (\<[a-zA-Z0-9]*)
     endCaptures:
       '1': {name: entity.name.end.opeing.vash}
     patterns:
     - include: $self
     
-  - comment: closing tag
-    match: \>
-    name: entity.name.begin.closing.vash
   - comment: swallow quotes
     match: \'|\"
   - include: $self
   - include: text.html.basic
   - include: source.js
-      
 
 - comment: transition brace/parenthesis
   begin: (@)?(?:\s*)\{|\(

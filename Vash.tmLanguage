@@ -43,6 +43,37 @@
 		</dict>
 		<dict>
 			<key>begin</key>
+			<string>(\&lt;head\&gt;|\&lt;html\&gt;|\&lt;body\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.special.opening.vash</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>special html tags</string>
+			<key>end</key>
+			<string>((\&lt;/head\&gt;|\&lt;/html\&gt;|\&lt;/body\&gt;))</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.special.closing.vash</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>$self</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
 			<string>(\&lt;[a-zA-Z0-9]+)</string>
 			<key>beginCaptures</key>
 			<dict>
@@ -85,7 +116,7 @@
 					<key>comment</key>
 					<string>attribute</string>
 					<key>match</key>
-					<string>([a-zA-Z0-9\-]+\=)(?=[\'\"])</string>
+					<string>([a-zA-Z0-9\-]+\=)(?=[\'\"\@])</string>
 					<key>name</key>
 					<string>entity.name.attribute.vash</string>
 				</dict>
@@ -181,7 +212,7 @@
 					<key>comment</key>
 					<string>innerHTML</string>
 					<key>end</key>
-					<string>(\&lt;)</string>
+					<string>(\&lt;[a-zA-Z0-9]*)</string>
 					<key>endCaptures</key>
 					<dict>
 						<key>1</key>
@@ -197,14 +228,6 @@
 							<string>$self</string>
 						</dict>
 					</array>
-				</dict>
-				<dict>
-					<key>comment</key>
-					<string>closing tag</string>
-					<key>match</key>
-					<string>\&gt;</string>
-					<key>name</key>
-					<string>entity.name.begin.closing.vash</string>
 				</dict>
 				<dict>
 					<key>comment</key>
