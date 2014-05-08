@@ -17,16 +17,21 @@ patterns:
 
 
 - comment: handle vash inside html
-  begin: (\<[a-zA-Z0-9]+(\s+[a-zA-Z0-9]+\=)+)
+  begin: (\<[a-zA-Z0-9]+)
   beginCaptures:
-    '0': {name: entity.name.html.0.vash}
-    '1': {name: entity.name.html.begin.vash}
-    '2': {name: entity.name.html.attribute.vash}
-  end: (\<(.+?)\>)
+    '1': {name: entity.name.begin.html.vash}
+  end: (\<)?(/)([a-zA-Z0-9\-]+)?(\>)
   endCaptures:
-    '1': {name: entity.name.html.end.vash}
+    '1': {name: entity.name.end.html.vash}
+    '2': {name: entity.name.end.slash.html.vash}
+    '3': {name: entity.name.end.html.vash}
+    '4': {name: entity.name.end.html.vash}
   patterns:
-  - comment: vash in quotes
+  - comment: attribute
+    match: ([a-zA-Z0-9\-]+\=)(?=[\'\"])
+    name: entity.name.attribute.vash
+  - comment: single quotes
+    name: text.basic.vash
     begin: (?<=\=)(\')
     beginCaptures:
       '1': {name: string.quoted.single.vash}
@@ -37,8 +42,8 @@ patterns:
     - include: $self
     - match: .
       name: string.quoted.single.vash
-    - include: text.html.basic
-  - comment: vash in double quotes
+  - comment: double quotes
+    name: text.basic.vash
     begin: (?<=\=)(\")
     beginCaptures:
       '1': {name: string.quoted.double.vash}
@@ -49,15 +54,34 @@ patterns:
     - include: $self
     - match: .
       name: string.quoted.double.vash
-    - include: text.html.basic
-  - include: text.html.basic
+  
+  - comment: innerHTML
+    begin: (\>)
+    beginCaptures:
+      '1': {name: entity.name.begin.closing.vash}
+    end: (\<)
+    endCaptures:
+      '1': {name: entity.name.end.opeing.vash}
+    patterns:
+    - include: $self
+    
+  - comment: closing tag
+    match: \>
+    name: entity.name.begin.closing.vash
+  - comment: swallow quotes
+    match: \'|\"
   - include: $self
+  - include: text.html.basic
+  - include: source.js
+      
 
-- comment: transition brace/bracket
+- comment: transition brace/parenthesis
   begin: (@)?(?:\s*)\{|\(
   beginCaptures:
     '1': {name: support.class.vash}
   end: \}|\)
+  endCaptures:
+    '1': {name: support.class.vash}
   patterns:
   - include: $self
   - include: source.js
@@ -76,5 +100,4 @@ patterns:
   captures:
     '1': {name: support.class.vash}
     '2': {name: entity.name.any.vash}
-
 - include: text.html.basic

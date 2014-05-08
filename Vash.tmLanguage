@@ -43,44 +43,52 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(\&lt;[a-zA-Z0-9]+(\s+[a-zA-Z0-9]+\=)+)</string>
+			<string>(\&lt;[a-zA-Z0-9]+)</string>
 			<key>beginCaptures</key>
 			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.html.0.vash</string>
-				</dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>entity.name.html.begin.vash</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.html.attribute.vash</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.html.attribute.vash</string>
+					<string>entity.name.begin.html.vash</string>
 				</dict>
 			</dict>
 			<key>comment</key>
 			<string>handle vash inside html</string>
 			<key>end</key>
-			<string>(\&lt;(.+?)\&gt;)</string>
+			<string>(\&lt;)?(/)([a-zA-Z0-9\-]+)?(\&gt;)</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>entity.name.html.end.vash</string>
+					<string>entity.name.end.html.vash</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.end.slash.html.vash</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.end.html.vash</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.end.html.vash</string>
 				</dict>
 			</dict>
 			<key>patterns</key>
 			<array>
+				<dict>
+					<key>comment</key>
+					<string>attribute</string>
+					<key>match</key>
+					<string>([a-zA-Z0-9\-]+\=)(?=[\'\"])</string>
+					<key>name</key>
+					<string>entity.name.attribute.vash</string>
+				</dict>
 				<dict>
 					<key>begin</key>
 					<string>(?&lt;=\=)(\')</string>
@@ -93,7 +101,7 @@
 						</dict>
 					</dict>
 					<key>comment</key>
-					<string>vash in quotes</string>
+					<string>single quotes</string>
 					<key>end</key>
 					<string>(\')</string>
 					<key>endCaptures</key>
@@ -104,6 +112,8 @@
 							<string>string.quoted.single.vash</string>
 						</dict>
 					</dict>
+					<key>name</key>
+					<string>text.basic.vash</string>
 					<key>patterns</key>
 					<array>
 						<dict>
@@ -115,10 +125,6 @@
 							<string>.</string>
 							<key>name</key>
 							<string>string.quoted.single.vash</string>
-						</dict>
-						<dict>
-							<key>include</key>
-							<string>text.html.basic</string>
 						</dict>
 					</array>
 				</dict>
@@ -134,7 +140,7 @@
 						</dict>
 					</dict>
 					<key>comment</key>
-					<string>vash in double quotes</string>
+					<string>double quotes</string>
 					<key>end</key>
 					<string>(\")</string>
 					<key>endCaptures</key>
@@ -145,6 +151,8 @@
 							<string>string.quoted.double.vash</string>
 						</dict>
 					</dict>
+					<key>name</key>
+					<string>text.basic.vash</string>
 					<key>patterns</key>
 					<array>
 						<dict>
@@ -157,11 +165,56 @@
 							<key>name</key>
 							<string>string.quoted.double.vash</string>
 						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>(\&gt;)</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>entity.name.begin.closing.vash</string>
+						</dict>
+					</dict>
+					<key>comment</key>
+					<string>innerHTML</string>
+					<key>end</key>
+					<string>(\&lt;)</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>entity.name.end.opeing.vash</string>
+						</dict>
+					</dict>
+					<key>patterns</key>
+					<array>
 						<dict>
 							<key>include</key>
-							<string>text.html.basic</string>
+							<string>$self</string>
 						</dict>
 					</array>
+				</dict>
+				<dict>
+					<key>comment</key>
+					<string>closing tag</string>
+					<key>match</key>
+					<string>\&gt;</string>
+					<key>name</key>
+					<string>entity.name.begin.closing.vash</string>
+				</dict>
+				<dict>
+					<key>comment</key>
+					<string>swallow quotes</string>
+					<key>match</key>
+					<string>\'|\"</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>$self</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -169,7 +222,7 @@
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>$self</string>
+					<string>source.js</string>
 				</dict>
 			</array>
 		</dict>
@@ -185,9 +238,17 @@
 				</dict>
 			</dict>
 			<key>comment</key>
-			<string>transition brace/bracket</string>
+			<string>transition brace/parenthesis</string>
 			<key>end</key>
 			<string>\}|\)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.vash</string>
+				</dict>
+			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>
