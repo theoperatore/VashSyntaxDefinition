@@ -10,10 +10,10 @@ patterns:
   name: text.basic.vash
   begin: (\<text\>)
   beginCaptures:
-    '1': {name: entity.name.textblock.vash}
+    '1': {name: entity.name.vash}
   end: (\<\/text\>)
   endCaptures:
-    '1': {name: entity.name.textblock.vash}
+    '1': {name: entity.name.vash}
   contentName: 'text.basic.vash'
 
 - comment: Multi-line Comments
