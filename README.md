@@ -69,4 +69,6 @@ Then of course:
 
 # License
 
+Most of this was modified from the [JSX](https://github.com/allanhortle/JSX) sublime text syntax definition. So they should get all of the credit.
+
 [MIT](http://opensource.org/licenses/MIT)
