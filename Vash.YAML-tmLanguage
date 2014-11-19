@@ -53,6 +53,7 @@ repository:
          
   html-tags-open:
     patterns:
+      - name: 
       - name: meta.tag.structure.any.html
         begin: (<!?)((?i:body|head|html|DOCTYPE)\b)
         endCaptures:
@@ -373,10 +374,13 @@ repository:
           '1': {name: punctuation.definition.comment.js}
 
       - name: comment.block.html.js
-        match: (<!--|-->)
-        captures:
-          '0': {name: punctuation.definition.comment.html.js}
-          '2': {name: punctuation.definition.comment.html.js}
+        begin: (<!--)
+        beginCaptures:
+          '1': {name: punctuation.definition.comment.html.js}
+        end: (-->)
+        endCaptures:
+          '1': {name: punctuation.definition.comment.html.js}
+        contentName: punctuation.definition.comment.html.js
 
   js-misc:
     patterns:
